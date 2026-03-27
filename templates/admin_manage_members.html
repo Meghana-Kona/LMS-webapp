@@ -1,33 +1,54 @@
 {% extends "base.html" %}
-{% block title %}Manage Members{% endblock %}
+{% block title %}Manage Members - LMS Admin{% endblock %}
+
 {% block content %}
+<div class="row mb-4 fade-up">
+  <div class="col-12 text-center text-md-start">
+    <h2 class="display-6 fw-bold mb-1"><i class="bi bi-people-fill text-primary"></i> Registered <span class="text-gradient">Members</span></h2>
+    <p class="text-secondary">View and manage all registered members on the platform.</p>
+  </div>
+</div>
 
-<h3 class="mb-4 text-primary"> Member Management</h3>
-
-<table class="table table-bordered table-striped bg-white shadow-sm">
-  <thead class="table-dark">
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for member in members %}
-    <tr>
-      <td>{{ member[0] }}</td>
-      <td>{{ member[1] }}</td>
-      <td>{{ member[2] }}</td>
-      <td>{{ member[3] }}</td>
-      <td>
-        <a href="/admin/member/delete/{{ member[0] }}" class="btn btn-danger btn-sm">Delete</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<a class="btn btn-secondary" href="javascript:history.back()"> Back</a>
+<div class="row fade-up delay-1">
+  <div class="col-12">
+    <div class="glass-panel p-0">
+      <div class="table-responsive p-3">
+        <table class="table mb-0 align-middle">
+          <thead>
+            <tr>
+              <th>Member ID</th>
+              <th>Full Name</th>
+              <th>Email Address</th>
+              <th>Phone Number</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in members %}
+            <tr>
+              <td class="text-secondary fw-bold">#{{ member[0] }}</td>
+              <td class="fw-bold d-flex align-items-center">
+                <div class="bg-primary bg-opacity-25 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px; font-size: 14px;">
+                  <b>{{ member[1][0] | upper }}</b>
+                </div>
+                {{ member[1] }}
+              </td>
+              <td><a href="mailto:{{ member[2] }}" class="text-decoration-none text-light">{{ member[2] }}</a></td>
+              <td class="text-secondary">{{ member[3] }}</td>
+              <td class="text-end">
+                <a href="/admin/member/delete/{{ member[0] }}" class="btn btn-sm btn-outline-danger px-3 rounded-pill" onclick="return confirm('Are you sure you want to permanently delete member {{ member[1] }}?');">
+                  <i class="bi bi-person-x"></i> Remove
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+            {% if not members %}
+            <tr><td colspan="5" class="text-center py-5 text-secondary"><i class="bi bi-people mb-3 d-block" style="font-size: 2rem;"></i>No members have registered yet.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

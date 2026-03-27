@@ -1,62 +1,149 @@
-<!-- templates/manage_books.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Manage Books</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
-<div class="container py-5">
-  <h2 class="mb-4 text-success"> Book Management</h2>
+{% extends "base.html" %}
+{% block title %}Manage Books - LMS Admin{% endblock %}
 
-  <!-- Add Book Form -->
-  <form action="/admin/book/add" method="POST" class="row g-3 mb-4 bg-light p-4 rounded shadow">
-    <div class="col-md-3">
-      <input type="text" name="title" class="form-control" placeholder="Book Title" required>
+{% block content %}
+<div class="row mb-4 fade-up">
+  <div class="col-12 d-flex justify-content-between align-items-center">
+    <div>
+      <h2 class="display-6 fw-bold mb-1"><i class="bi bi-book-half text-primary"></i> Manage <span class="text-gradient">Books</span></h2>
+      <p class="text-secondary">Add new inventory or manage existing titles and categories.</p>
     </div>
-    <div class="col-md-3">
-      <input type="text" name="author" class="form-control" placeholder="Author" required>
-    </div>
-    <div class="col-md-2">
-      <input type="text" name="isbn" class="form-control" placeholder="ISBN">
-    </div>
-    <div class="col-md-2">
-      <input type="number" name="quantity" class="form-control" placeholder="Qty" min="1" required>
-    </div>
-    <div class="col-md-2">
-      <button class="btn btn-success w-100">Add Book</button>
-    </div>
-  </form>
-
- <!-- Book Table -->
-<table class="table table-bordered table-striped shadow-sm bg-white">
-  <thead class="table-dark">
-    <tr>
-      <th>ID</th><th>Title</th><th>Author</th><th>ISBN</th><th>Qty</th><th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for book in books %}
-    <tr>
-      <form action="/admin/book/update/{{ book[0] }}" method="POST">
-        <td>{{ book[0] }}</td>
-        <td><input type="text" name="title" class="form-control" value="{{ book[1] }}" required></td>
-        <td><input type="text" name="author" class="form-control" value="{{ book[2] }}" required></td>
-        <td><input type="text" name="isbn" class="form-control" value="{{ book[3] }}"></td>
-        <td><input type="number" name="quantity" class="form-control" value="{{ book[4] }}" min="1" required></td>
-        <td>
-          <button class="btn btn-sm btn-primary">Update</button>
-          <a href="/admin/book/delete/{{ book[0] }}" class="btn btn-sm btn-danger">Delete</a>
-        </td>
-      </form>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-
-  <a href="/admin/dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal"><i class="bi bi-plus-lg"></i> Add New Book</button>
+  </div>
 </div>
-</body>
-</html>
+
+<div class="row fade-up delay-1">
+  <div class="col-12">
+    <div class="glass-panel p-0">
+      <div class="table-responsive p-3">
+        <table class="table mb-0 align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Book Title & Category</th>
+              <th>Author</th>
+              <th>ISBN</th>
+              <th>Stock</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for book in books %}
+            <tr>
+              <td class="text-secondary fw-bold">#{{ book[0] }}</td>
+              <td>
+                <div class="fw-bold text-light">{{ book[1] }}</div>
+                <small class="text-secondary"><span class="badge bg-secondary bg-opacity-25">{{ book[5] }}</span></small>
+              </td>
+              <td>{{ book[2] }}</td>
+              <td class="text-secondary font-monospace">{{ book[3] }}</td>
+              <td>
+                {% if book[4] > 5 %}
+                  <span class="badge bg-success bg-opacity-25 text-success px-3">{{ book[4] }}</span>
+                {% elif book[4] > 0 %}
+                  <span class="badge bg-warning bg-opacity-25 text-warning px-3">{{ book[4] }}</span>
+                {% else %}
+                  <span class="badge bg-danger bg-opacity-25 text-danger px-3">Out of Stock</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#updateModal{{ book[0] }}"><i class="bi bi-pencil-square"></i></button>
+                <a href="/admin/book/delete/{{ book[0] }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this book permanently?');"><i class="bi bi-trash3"></i></a>
+              </td>
+            </tr>
+
+            <!-- Update Content Modal for Book {{ book[0] }} -->
+            <div class="modal fade" id="updateModal{{ book[0] }}" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content glass-panel p-0 border-0">
+                  <div class="modal-header border-bottom border-light border-opacity-10 py-3">
+                    <h5 class="modal-title"><i class="bi bi-pencil-square text-primary"></i> Edit Book Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body p-4">
+                    <form method="POST" action="/admin/book/update/{{ book[0] }}">
+                      <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" class="form-control" value="{{ book[1] }}" required>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Author</label>
+                        <input type="text" name="author" class="form-control" value="{{ book[2] }}" required>
+                      </div>
+                      <div class="mb-3">
+                         <label class="form-label">Category</label>
+                         <input type="text" name="category" class="form-control" value="{{ book[5] }}" required>
+                      </div>
+                      <div class="row g-3 mb-4">
+                        <div class="col-md-7">
+                          <label class="form-label">ISBN</label>
+                          <input type="text" name="isbn" class="form-control" value="{{ book[3] }}" required>
+                        </div>
+                        <div class="col-md-5">
+                          <label class="form-label">Stock Quantity</label>
+                          <input type="number" name="quantity" class="form-control" value="{{ book[4] }}" min="0" required>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-primary w-100"><i class="bi bi-save"></i> Save Changes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% if not books %}
+            <tr><td colspan="6" class="text-center py-4 text-secondary">No books found in the library catalog.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Book Modal -->
+<div class="modal fade" id="addBookModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content glass-panel p-0 border-0">
+      <div class="modal-header border-bottom border-light border-opacity-10 py-3">
+        <h5 class="modal-title"><i class="bi bi-journal-plus text-success"></i> Add New Book</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form method="POST" action="/admin/book/add">
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" placeholder="e.g. Clean Code" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Author</label>
+            <input type="text" name="author" class="form-control" placeholder="e.g. Robert C. Martin" required>
+          </div>
+          <div class="mb-3">
+             <label class="form-label">Category</label>
+             <input type="text" name="category" list="cat-options" class="form-control" placeholder="Computer Science" required>
+             <datalist id="cat-options">
+               <option value="Computer Science">
+               <option value="Fiction">
+               <option value="Science">
+               <option value="History">
+               <option value="Biography">
+             </datalist>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-7">
+              <label class="form-label">ISBN</label>
+              <input type="text" name="isbn" class="form-control" placeholder="13-digit code" required>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Initial Stock</label>
+              <input type="number" name="quantity" class="form-control" placeholder="0" min="1" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success w-100"><i class="bi bi-plus-circle"></i> Add to Catalog</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

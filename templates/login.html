@@ -1,36 +1,42 @@
 {% extends "base.html" %}
-{% block title %}Admin Login - LMS{% endblock %}
+{% block title %}Admin Portal - LMS{% endblock %}
 
 {% block content %}
-<div class="container pt-4" style="max-width: 450px;">
+<div class="row justify-content-center align-items-center h-100 fade-up" style="min-height: 70vh;">
+  <div class="col-md-6 col-lg-5">
+    
+    <div class="text-center mb-4">
+      <i class="bi bi-shield-lock text-gradient" style="font-size: 3rem;"></i>
+      <h2 class="fw-bold mt-2">Admin Portal</h2>
+      <p class="text-secondary">Secure access for library administrators</p>
+    </div>
 
-  <!-- Back Button Above Card -->
- 
-
-  <!-- Login Card -->
-  <div class="card shadow p-4">
-    <h3 class="text-center mb-4 text-success">Admin Login</h3>
-    <form method="POST">
-      <div class="mb-3">
-        <label>Username</label>
-        <input type="text" name="username" class="form-control"
-               placeholder="Enter admin username"
-               value="{{ request.form.username if error else '' }}" required>
-      </div>
-      <div class="mb-3">
-        <label>Password</label>
-        <input type="password" name="password" class="form-control"
-               placeholder="Enter password" required>
-      </div>
-      {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-      {% endif %}
-      <button class="btn btn-success w-100">Login</button>
-    </form>
+    <div class="glass-card p-5">
+      <form method="POST" action="/admin/login">
+        <div class="mb-4">
+          <label class="form-label"><i class="bi bi-person-badge"></i> Username</label>
+          <input type="text" name="username" class="form-control form-control-lg"
+                 placeholder="Enter admin username"
+                 value="{{ request.form.username if error else '' }}" required autofocus>
+        </div>
+        
+        <div class="mb-4">
+          <label class="form-label"><i class="bi bi-key"></i> Password</label>
+          <input type="password" name="password" class="form-control form-control-lg"
+                 placeholder="Enter password" required>
+        </div>
+        
+        {% if error %}
+          <div class="alert alert-danger px-4 py-3 mb-4 rounded-3 d-flex align-items-center">
+             <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i> 
+             <div>{{ error }}</div>
+          </div>
+        {% endif %}
+        
+        <button class="btn btn-primary btn-lg w-100 mb-3"><i class="bi bi-box-arrow-in-right"></i> Authenticate</button>
+      </form>
+    </div>
+    
   </div>
-   <div class="mb-3">
-   <a href="/" class="btn btn-secondary">Back</a>
-  </div>
-
 </div>
 {% endblock %}

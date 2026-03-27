@@ -1,34 +1,51 @@
 {% extends "base.html" %}
-{% block title %}Transaction Log{% endblock %}
+{% block title %}Transactions Log - LMS Admin{% endblock %}
+
 {% block content %}
-
-<h3 class="mb-4 text-success"> Transaction Log</h3>
-
-<table class="table table-bordered table-striped bg-white shadow-sm">
-  <thead class="table-dark">
-    <tr>
-      <th>Member Name</th>
-      <th>Book Title</th>
-      <th>Issue Date</th>
-      <th>Return Date</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in transactions %}
-    <tr>
-      <td>{{ row[0] }}</td>
-      <td>{{ row[1] }}</td>
-      <td>{{ row[2] }}</td>
-      <td>{{ row[3] or 'Not Returned' }}</td>
-      <td>{{ row[4] }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<div class="mb-3">
-    <a class="btn btn-secondary" href="javascript:history.back()"> Back</a>
+<div class="row mb-4 fade-up">
+  <div class="col-12">
+    <h2 class="display-6 fw-bold mb-1"><i class="bi bi-clock-history text-primary"></i> Transactions <span class="text-gradient">Log</span></h2>
+    <p class="text-secondary">A complete history of all book issues and returns.</p>
   </div>
+</div>
 
+<div class="row fade-up delay-1">
+  <div class="col-12">
+    <div class="glass-panel p-0">
+      <div class="table-responsive p-3">
+        <table class="table mb-0 align-middle">
+          <thead>
+            <tr>
+              <th>Member Name</th>
+              <th>Book Title</th>
+              <th>Issue Date</th>
+              <th>Return Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for trans in transactions %}
+            <tr>
+              <td class="fw-bold"><i class="bi bi-person h5 me-2 text-secondary"></i> {{ trans[0] }}</td>
+              <td><i class="bi bi-book h5 me-2 text-secondary"></i> {{ trans[1] }}</td>
+              <td class="font-monospace text-secondary">{{ trans[2] }}</td>
+              <td class="font-monospace text-secondary">{{ trans[3] if trans[3] else '--' }}</td>
+              <td>
+                {% if trans[4] == 'Issued' %}
+                  <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-50 px-3 py-2 rounded-pill d-inline-flex align-items-center"><span class="spinner-grow spinner-grow-sm me-2 text-primary" role="status" style="width: 8px; height: 8px;"></span> Issued</span>
+                {% else %}
+                  <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill"><i class="bi bi-check2-circle"></i> Returned</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            {% if not transactions %}
+            <tr><td colspan="5" class="text-center py-5 text-secondary"><i class="bi bi-inbox mb-3 d-block" style="font-size: 2rem;"></i>No transactions found in the database.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

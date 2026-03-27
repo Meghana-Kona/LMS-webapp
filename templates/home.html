@@ -1,60 +1,62 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Library Management System</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <style>
-    body {
-      background: linear-gradient(135deg, #e0eafc, #cfdef3);
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .card {
-      border-radius: 20px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
-    .btn-custom {
-      border-radius: 30px;
-      padding: 10px 25px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container py-5">
-    <div class="text-center mb-5">
-      <h1 class="display-5 fw-bold text-primary"> Library Management System</h1>
-      
-    </div>
+{% extends "base.html" %}
+{% block title %}Welcome - Nexus LMS{% endblock %}
 
-    <div class="row g-4 justify-content-center">
-
-      <!-- Admin Login -->
-      <div class="col-md-4">
-        <div class="card p-4 text-center bg-light">
-          <h4 class="mb-3"> Admin Panel</h4>
-          <p>Manage books, members, reports & notifications</p>
-          <a href="/admin/login" class="btn btn-primary btn-custom">Admin Login</a>
-        </div>
-      </div>
-
-      <!-- Member Login -->
-      <div class="col-md-4">
-        <div class="card p-4 text-center bg-light">
-          <h4 class="mb-3"> Member Login</h4>
-          <p>View your issued books, due dates and fines</p>
-          <a href="/member/login" class="btn btn-success btn-custom">Login</a>
-        </div>
-      </div>
-
-      <!-- Member Signup -->
-      <div class="col-md-4">
-        <div class="card p-4 text-center bg-light">
-          <h4 class="mb-3"> New Member?</h4>
-          <p>Register to borrow books and access your dashboard</p>
-          <a href="/member/signup" class="btn btn-outline-success btn-custom">Sign Up</a>
-        </div>
-      </div>
-
+{% block content %}
+<div class="row align-items-center mb-5 fade-up">
+  <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+    <h1 class="display-4 fw-bold mb-3">
+      The Future of <br>
+      <span class="text-gradient">Library Management</span>
+    </h1>
+    <p class="lead text-secondary mb-4">
+      Experience a seamless, beautiful, and secure platform to manage your library's modern operations. Built for speed, designed for elegance.
+    </p>
+    <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+      <a href="/member/signup" class="btn btn-primary btn-lg px-4"><i class="bi bi-person-plus"></i> Join Now</a>
+      <a href="/member/login" class="btn btn-outline-primary btn-lg px-4"><i class="bi bi-box-arrow-in-right"></i> Login</a>
     </div>
   </div>
-</body>
-</html>
+  <div class="col-lg-6">
+    <div class="glass-panel text-center">
+      <i class="bi bi-rocket-takeoff text-gradient" style="font-size: 5rem;"></i>
+      <h3 class="mt-3">Elevate Your Library</h3>
+      <p class="text-secondary">Fully digital. Always in sync.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-4">
+  <div class="col-md-4 fade-up delay-1">
+    <div class="glass-card p-4 h-100 text-center">
+      <div class="mb-3">
+        <i class="bi bi-shield-lock text-gradient" style="font-size: 2.5rem;"></i>
+      </div>
+      <h4 class="mb-3">Admin Portal</h4>
+      <p class="text-secondary flex-grow-1">Access powerful tools to manage books, oversee members, and generate real-time reports.</p>
+      <a href="/admin/login" class="btn btn-outline-primary w-100 mt-2">Admin Login</a>
+    </div>
+  </div>
+
+  <div class="col-md-4 fade-up delay-2">
+    <div class="glass-card p-4 h-100 text-center">
+      <div class="mb-3">
+        <i class="bi bi-person-vcard text-gradient" style="font-size: 2.5rem;"></i>
+      </div>
+      <h4 class="mb-3">Member Access</h4>
+      <p class="text-secondary flex-grow-1">Log in to view your issued books, check due dates, and explore the catalog.</p>
+      <a href="/member/login" class="btn btn-primary w-100 mt-2">Member Login</a>
+    </div>
+  </div>
+
+  <div class="col-md-4 fade-up delay-3">
+    <div class="glass-card p-4 h-100 text-center">
+      <div class="mb-3">
+        <i class="bi bi-journal-plus text-gradient" style="font-size: 2.5rem;"></i>
+      </div>
+      <h4 class="mb-3">New Registration</h4>
+      <p class="text-secondary flex-grow-1">Not a member yet? Sign up instantly and unlock the world of knowledge.</p>
+      <a href="/member/signup" class="btn btn-outline-success w-100 mt-2">Sign Up</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

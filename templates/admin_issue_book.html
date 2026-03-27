@@ -1,40 +1,59 @@
 {% extends "base.html" %}
-{% block title %}Issue Book{% endblock %}
+{% block title %}Issue Book - LMS Admin{% endblock %}
+
 {% block content %}
-<div class="container">
-  <h2 class="text-primary mb-4">Issue Book</h2>
+<div class="row mb-4 fade-up">
+  <div class="col-12 col-md-8 mx-auto text-center">
+    <h2 class="display-6 fw-bold mb-1"><i class="bi bi-bookmark-plus text-primary"></i> <span class="text-gradient">Issue a Book</span></h2>
+    <p class="text-secondary">Lend a book to a registered member from the catalog.</p>
+  </div>
+</div>
 
-  {% if success %}
-  <div class="alert alert-success text-center">{{ success }}</div>
-{% endif %}
+<div class="row fade-up delay-1 justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="glass-panel p-5">
+      
+      {% if success %}
+        <div class="alert alert-success px-4 py-3 mb-4 rounded-3 d-flex align-items-center">
+           <i class="bi bi-check-circle-fill me-2 fs-5"></i> 
+           <div>{{ success }}</div>
+        </div>
+      {% endif %}
 
-{% if error %}
-  <div class="alert alert-danger">{{ error }}</div>
-{% endif %}
+      <form method="POST" action="/admin/issue">
+        
+        <div class="mb-4">
+          <label class="form-label h6"><i class="bi bi-person"></i> Select Member</label>
+          <div class="input-group input-group-lg">
+            <span class="input-group-text bg-transparent border-end-0" style="border-color: rgba(255,255,255,0.1);"><i class="bi bi-search text-secondary"></i></span>
+            <select name="member_id" class="form-select form-control-lg border-start-0 ps-0" required>
+              <option value="" disabled selected class="bg-dark">Choose a registered member...</option>
+              {% for member in members %}
+                <option value="{{ member[0] }}" class="bg-dark text-light">#{{ member[0] }} - {{ member[1] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label class="form-label h6"><i class="bi bi-book"></i> Select Book to Issue</label>
+           <div class="input-group input-group-lg">
+            <span class="input-group-text bg-transparent border-end-0" style="border-color: rgba(255,255,255,0.1);"><i class="bi bi-journal-check text-secondary"></i></span>
+            <select name="book_id" class="form-select form-control-lg border-start-0 ps-0" required>
+              <option value="" disabled selected class="bg-dark">Choose an available book...</option>
+              {% for book in books %}
+                <option value="{{ book[0] }}" class="bg-dark text-light">"{{ book[1] }}" (Stock: {{ book[2] }})</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        
+        <div class="mt-5">
+            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill"><i class="bi bi-check2-circle"></i> Confirm Issue Book</button>
+        </div>
+      </form>
 
-  <form method="POST">
-    <div class="mb-3">
-      <label class="form-label">Select Member</label>
-      <select class="form-select" name="member_id" required>
-        {% for member in members %}
-          <option value="{{ member[0] }}">{{ member[1] }}</option>
-        {% endfor %}
-      </select>
     </div>
-
-    <div class="mb-3">
-      <label class="form-label">Select Book</label>
-      <select class="form-select" name="book_id" required>
-        {% for book in books %}
-          <option value="{{ book[0] }}">{{ book[1] }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <button type="submit" class="btn btn-success">Issue Book</button>
-  </form>
- 
-    <a class="btn btn-secondary" href="javascript:history.back()"> Back</a>
-  
+  </div>
 </div>
 {% endblock %}

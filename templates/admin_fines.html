@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Finances Dashboard - LMS Admin{% endblock %}
+
+{% block content %}
+<div class="row mb-5 fade-up align-items-center">
+  <div class="col-md-8 text-center text-md-start">
+    <h2 class="display-6 fw-bold mb-1"><i class="bi bi-cash-stack text-success"></i> Collected <span class="text-gradient">Fines</span></h2>
+    <p class="text-secondary">Track revenue history from overdue book payments.</p>
+  </div>
+  <div class="col-md-4 mt-3 mt-md-0 d-flex justify-content-center justify-content-md-end">
+    <div class="glass-card px-4 py-3 d-inline-flex flex-column align-items-end border-success border-opacity-50">
+      <span class="text-success small fw-bold text-uppercase tracking-wider">Total Revenue</span>
+      <h2 class="text-light mb-0 fw-bold">${{ total_collected }}.00</h2>
+    </div>
+  </div>
+</div>
+
+<div class="row fade-up delay-1 justify-content-center">
+  <div class="col-12">
+    <div class="glass-panel p-0">
+      
+      <div class="table-responsive p-3">
+        <table class="table mb-0 align-middle">
+          <thead>
+            <tr>
+              <th>Member Name</th>
+              <th>Paid Amount</th>
+              <th>Date & Time Processed</th>
+              <th>Transaction Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pay in payments %}
+            <tr>
+              <td class="fw-bold"><i class="bi bi-person h5 me-2 text-secondary"></i> {{ pay[0] }}</td>
+              <td class="text-success fw-bold font-monospace fs-5">+${{ pay[1] }}.00</td>
+              <td class="font-monospace text-secondary">{{ pay[2] }}</td>
+              <td>
+                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill"><i class="bi bi-check-circle-fill"></i> Settled</span>
+              </td>
+            </tr>
+            {% endfor %}
+            {% if not payments %}
+            <tr><td colspan="4" class="text-center py-5 text-secondary"><i class="bi bi-wallet2 mb-3 d-block" style="font-size: 2rem;"></i>No payments recorded yet.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

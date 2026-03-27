@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Pay Fine - LMS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mb-5 fade-up" style="margin-top: 5vh;">
+  <div class="col-12 col-md-8 col-lg-6">
+    
+    <div class="text-center mb-4">
+      <h2 class="display-6 fw-bold mb-1"><i class="bi bi-credit-card-2-front text-primary"></i> Secure <span class="text-gradient">Checkout</span></h2>
+      <p class="text-secondary">Clear your outstanding balances to maintain library privileges.</p>
+    </div>
+
+    <div class="glass-panel p-5">
+      <div class="text-center mb-4 pb-4 border-bottom" style="border-color: rgba(255,255,255,0.05) !important;">
+        <h6 class="text-secondary text-uppercase tracking-wider">Total Due</h6>
+        <h1 class="display-3 fw-bold text-light mb-0">${{ total_owed }}</h1>
+      </div>
+
+      <form method="POST" action="/member/process_payment">
+        <input type="hidden" name="amount" value="{{ total_owed }}">
+        
+        <div class="mb-3">
+          <label class="form-label text-secondary small text-uppercase fw-bold"><i class="bi bi-person-vcard"></i> Name on Card</label>
+          <input type="text" class="form-control form-control-lg bg-dark text-light border-secondary border-opacity-25" placeholder="John M. Doe" required autocomplete="cc-name">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label text-secondary small text-uppercase fw-bold"><i class="bi bi-123"></i> Card Number</label>
+          <div class="input-group">
+            <input type="text" class="form-control form-control-lg bg-dark text-light border-secondary border-opacity-25 border-end-0" placeholder="0000 0000 0000 0000" pattern="\d{16}" title="16 Digit Card Number" required>
+            <span class="input-group-text bg-dark border-secondary border-opacity-25 border-start-0 text-primary">
+              <i class="bi bi-credit-card-fill"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-5">
+          <div class="col-6">
+            <label class="form-label text-secondary small text-uppercase fw-bold">Expiry Date</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary border-opacity-25" placeholder="MM/YY" pattern="\d{2}/\d{2}" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label text-secondary small text-uppercase fw-bold">CVC / CVV</label>
+            <input type="password" class="form-control bg-dark text-light border-secondary border-opacity-25" placeholder="***" pattern="\d{3,4}" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill py-3 fw-bold fs-5 shadow-lg" style="letter-spacing: 1px;">
+          <i class="bi bi-lock-fill me-2"></i> Pay ${{ total_owed }}.00 Now
+        </button>
+        <div class="text-center mt-3 text-secondary small">
+          <i class="bi bi-shield-lock-fill text-success"></i> Payments are mock simulated. No real charges made.
+        </div>
+      </form>
+    </div>
+    
+  </div>
+</div>
+{% endblock %}

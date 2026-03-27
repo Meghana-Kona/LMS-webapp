@@ -1,115 +1,94 @@
 {% extends "base.html" %}
-{% block title %}Reports - Library Management System{% endblock %}
+{% block title %}Activity Reports - LMS Admin{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-  <h2 class="text-center text-primary mb-4"> Reports Dashboard</h2>
+<div class="row mb-4 fade-up">
+  <div class="col-12">
+    <h2 class="display-6 fw-bold mb-1"><i class="bi bi-bar-chart-line text-primary"></i> <span class="text-gradient">Activity Reports</span></h2>
+    <p class="text-secondary">Analyze library usage and circulation over different periods.</p>
+  </div>
+</div>
 
-  <!-- Summary Cards -->
-   <div class="row text-center mb-5">
-    <div class="col-md-4">
-      <div >
-        <div >
-          <h3 >Issued Today:{{ daily|length }}</h3>
-          
+<div class="row fade-up delay-1">
+  <div class="col-12">
+    <div class="glass-panel text-light">
+      
+      <!-- Nav Tabs -->
+      <ul class="nav nav-pills mb-4 nav-fill glass-card p-2 rounded-pill" id="reportTabs" role="tablist" style="border: 1px solid rgba(255,255,255,0.05);">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active rounded-pill fw-bold text-light" id="daily-tab" data-bs-toggle="pill" data-bs-target="#daily" type="button" role="tab" style="transition:all 0.3s; background-color: transparent;"><i class="bi bi-calendar-event me-2"></i> Today</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link rounded-pill fw-bold text-light" id="weekly-tab" data-bs-toggle="pill" data-bs-target="#weekly" type="button" role="tab" style="transition:all 0.3s; background-color: transparent;"><i class="bi bi-calendar-week me-2"></i> Last 7 Days</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link rounded-pill fw-bold text-light" id="monthly-tab" data-bs-toggle="pill" data-bs-target="#monthly" type="button" role="tab" style="transition:all 0.3s; background-color: transparent;"><i class="bi bi-calendar-month me-2"></i> This Month</button>
+        </li>
+      </ul>
+      <style>
+         .nav-pills .nav-link.active {
+             background: var(--accent-gradient) !important;
+             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+             color: white !important;
+         }
+      </style>
+
+      <!-- Tab Content -->
+      <div class="tab-content border-top border-light border-opacity-10 pt-4" id="reportTabsContent">
+        
+        <!-- MACRO for rendering table -->
+        {% macro render_report_table(data) %}
+          <div class="table-responsive">
+            <table class="table mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th>Book Title</th>
+                  <th>Member Name</th>
+                  <th>Issue Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for d in data %}
+                <tr>
+                  <td class="fw-bold"><i class="bi bi-book me-2 text-secondary"></i> {{ d[0] }}</td>
+                  <td>{{ d[1] }}</td>
+                  <td class="font-monospace text-secondary">{{ d[2] }}</td>
+                  <td>
+                    {% if d[3] == 'Issued' %}
+                      <span class="badge bg-primary bg-opacity-25 text-primary px-3 rounded-pill">Issued</span>
+                    {% else %}
+                      <span class="badge bg-success bg-opacity-25 text-success px-3 rounded-pill">Returned</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+                {% if not data %}
+                <tr><td colspan="4" class="text-center py-5 text-secondary">No activity recorded for this period.</td></tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        {% endmacro %}
+
+        <div class="tab-pane fade show active" id="daily" role="tabpanel">
+           <h5 class="mb-3 text-primary"><i class="bi bi-record-circle me-2"></i> Today's Activity</h5>
+           {{ render_report_table(daily) }}
         </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div >
-        <div >
-          <h3>Issued This Week:{{ weekly|length }}</h3>
-          
+        
+        <div class="tab-pane fade" id="weekly" role="tabpanel">
+           <h5 class="mb-3 text-warning"><i class="bi bi-bar-chart-steps me-2"></i> Past 7 Days</h5>
+           {{ render_report_table(weekly) }}
         </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div >
-        <div >
-          <h3>Issued This Month:{{ monthly|length }}</h3>
-          
+        
+        <div class="tab-pane fade" id="monthly" role="tabpanel">
+           <h5 class="mb-3 text-success"><i class="bi bi-bar-chart me-2"></i> This Month So Far</h5>
+           {{ render_report_table(monthly) }}
         </div>
+        
       </div>
+      
     </div>
-  </div>
-
-  <!-- Daily Report -->
-  <h4 class="text-secondary mb-3">Daily Report</h4>
-  <div class="table-responsive mb-5">
-    <table class="table table-bordered table-striped bg-white">
-      <thead class="table-dark">
-        <tr>
-          <th>Book Title</th>
-          <th>Member Name</th>
-          <th>Issue Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in daily %}
-        <tr>
-          <td>{{ row[0] }}</td>
-          <td>{{ row[1] }}</td>
-          <td>{{ row[2] }}</td>
-          <td>{{ row[3] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Weekly Report -->
-  <h4 class="text-secondary mb-3"> Weekly Report</h4>
-  <div class="table-responsive mb-5">
-    <table class="table table-bordered table-striped bg-white">
-      <thead class="table-dark">
-        <tr>
-          <th>Book Title</th>
-          <th>Member Name</th>
-          <th>Issue Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in weekly %}
-        <tr>
-          <td>{{ row[0] }}</td>
-          <td>{{ row[1] }}</td>
-          <td>{{ row[2] }}</td>
-          <td>{{ row[3] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Monthly Report -->
-  <h4 class="text-secondary mb-3">Monthly Report</h4>
-  <div class="table-responsive mb-5">
-    <table class="table table-bordered table-striped bg-white">
-      <thead class="table-dark">
-        <tr>
-          <th>Book Title</th>
-          <th>Member Name</th>
-          <th>Issue Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in monthly %}
-        <tr>
-          <td>{{ row[0] }}</td>
-          <td>{{ row[1] }}</td>
-          <td>{{ row[2] }}</td>
-          <td>{{ row[3] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <div class="text-center mt-4">
-    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back </a>
   </div>
 </div>
 {% endblock %}
